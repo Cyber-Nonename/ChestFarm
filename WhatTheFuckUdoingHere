@@ -10,6 +10,7 @@ task.wait(1)
 game:GetService("VirtualInputManager"):SendMouseButtonEvent(500,500, 0, true, game, 1)
 game:GetService("VirtualInputManager"):SendMouseButtonEvent(500,500, 0, false, game, 1)
 function thisCode()
+
     repeat task.wait() until game:IsLoaded()
     local PlaceID = game.PlaceId
     local AllIDs = {}
