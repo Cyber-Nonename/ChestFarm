@@ -10,6 +10,53 @@ task.wait(1)
 game:GetService("VirtualInputManager"):SendMouseButtonEvent(500,500, 0, true, game, 1)
 game:GetService("VirtualInputManager"):SendMouseButtonEvent(500,500, 0, false, game, 1)
 
+--// Cache
+
+local getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, stringlower = getgenv, getnamecallmethod, hookmetamethod, newcclosure, checkcaller, string.lower
+
+--// Loaded check
+
+if getgenv().ED_AntiKick then return end
+
+--// Variables
+
+local Players, StarterGui, OldNamecall = game:GetService("Players"), game:GetService("StarterGui")
+
+--// Global Variables
+
+getgenv().ED_AntiKick = {
+    SendNotifications = true, -- Set to true if you want to get notified for every event
+    CheckCaller = true -- Set to true if you want to disable kicking by other executed scripts
+}
+
+--// Main
+
+OldNamecall = hookmetamethod(game, "__namecall", newcclosure(function(...)
+    if (getgenv().ED_AntiKick.CheckCaller and not checkcaller() or true) and stringlower(getnamecallmethod()) == "kick" then
+        if getgenv().ED_AntiKick.SendNotifications then
+            StarterGui:SetCore("SendNotification", {
+                Title = "Thanks For Choose Us",
+                Text = "The script has successfully loaded.",
+                Icon = "rbxassetid://12865094987",
+                Duration = 2,
+            })
+        end
+
+        return nil
+    end
+
+    return OldNamecall(...)
+end))
+
+if getgenv().ED_AntiKick.SendNotifications then
+    StarterGui:SetCore("SendNotification", {
+        Title = "Thanks For Choose Us",
+        Text = "Chest-Farm script loaded!",
+        Icon = "rbxassetid://12865094987",
+        Duration = 3,
+    })
+end
+
 function thisCode()
     repeat task.wait() until game:IsLoaded()
     local PlaceID = game.PlaceId
